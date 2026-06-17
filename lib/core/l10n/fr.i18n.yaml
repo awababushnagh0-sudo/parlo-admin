@@ -1,0 +1,18 @@
+# French — partial; missing keys fall back to the English base locale.
+app:
+  title: "Parlo Admin"
+  tagline: "Gérer les utilisateurs, les plaintes et les notes"
+
+nav:
+  dashboard: "Tableau de bord"
+  users: "Utilisateurs"
+  complaints: "Plaintes"
+  ratings: "Notes"
+  signOut: "Se déconnecter"
+
+auth:
+  subtitle: "Connectez-vous avec votre compte administrateur"
+  email: "E-mail"
+  password: "Mot de passe"
+  signIn: "Se connecter"
+  notAuthorized: "Ce compte n'est pas administrateur"

@@ -1,0 +1,18 @@
+# Arabic — partial; missing keys fall back to the English base locale.
+app:
+  title: "بارلو أدمن"
+  tagline: "إدارة المستخدمين والشكاوى والتقييمات"
+
+nav:
+  dashboard: "لوحة التحكم"
+  users: "المستخدمون"
+  complaints: "الشكاوى"
+  ratings: "التقييمات"
+  signOut: "تسجيل الخروج"
+
+auth:
+  subtitle: "سجّل الدخول بحساب المشرف"
+  email: "البريد الإلكتروني"
+  password: "كلمة المرور"
+  signIn: "تسجيل الدخول"
+  notAuthorized: "هذا الحساب ليس مشرفًا"

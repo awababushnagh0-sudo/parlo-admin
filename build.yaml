@@ -1,0 +1,12 @@
+targets:
+  $default:
+    builders:
+      slang_build_runner:
+        enabled: true
+        options:
+          input_directory: lib/core/l10n
+          input_file_pattern: .i18n.yaml
+          output_directory: lib/core/l10n/generated
+          output_file_name: translations.g.dart
+          base_locale: en
+          fallback_strategy: base_locale
