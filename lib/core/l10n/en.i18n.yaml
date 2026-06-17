@@ -44,15 +44,14 @@ common:
 
 dashboard:
   title: "Overview"
+  subtitle: "Platform activity at a glance"
   totalUsers: "Total users"
-  activeUsers7d: "Active (7 days)"
+  newThisMonth: "New this month"
   openComplaints: "Open complaints"
   avgRating: "Average rating"
-  totalRatings: "Total ratings"
-  wordsLearned: "Words saved (platform)"
-  signupsOverTime: "Signups over time"
-  streakDistribution: "Streak distribution"
-  wordsByLanguage: "Saved words by language"
+  totalRatings: "$n total"
+  signupsOverTime: "Signups (last 6 months)"
+  ratingDistribution: "Rating distribution"
   noChartData: "Not enough data to chart yet"
 
 users:

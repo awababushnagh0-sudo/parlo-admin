@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:polyglot_admin/core/l10n/generated/translations.g.dart';
-import 'package:polyglot_admin/core/theme/app_spacing.dart';
 import 'package:polyglot_admin/core/ui/widgets/empty_state.dart';
 
 /// Renders an [AsyncValue] with consistent loading / error / data handling so

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:polyglot_admin/core/routers/shell/admin_shell.dart';
@@ -12,10 +11,11 @@ import 'package:polyglot_admin/features/users/presentation/pages/users_list_scre
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/',
+    // Start on the gate; the redirect promotes an authorized admin to '/'.
+    initialLocation: '/login',
     // Re-evaluate guards whenever the resolved auth status changes.
     redirect: (context, state) {
-      final status = ref.watch(AuthDeps.authStatusProvider).valueOrNull;
+      final status = ref.watch(AuthDeps.authStatusProvider).value;
 
       // Still resolving auth / admin check — don't redirect yet.
       if (status == null || status == AuthStatus.unknown) return null;

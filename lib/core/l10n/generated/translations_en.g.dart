@@ -205,11 +205,14 @@ class Translations$dashboard$en {
 	/// en: 'Overview'
 	String get title => 'Overview';
 
+	/// en: 'Platform activity at a glance'
+	String get subtitle => 'Platform activity at a glance';
+
 	/// en: 'Total users'
 	String get totalUsers => 'Total users';
 
-	/// en: 'Active (7 days)'
-	String get activeUsers7d => 'Active (7 days)';
+	/// en: 'New this month'
+	String get newThisMonth => 'New this month';
 
 	/// en: 'Open complaints'
 	String get openComplaints => 'Open complaints';
@@ -217,20 +220,14 @@ class Translations$dashboard$en {
 	/// en: 'Average rating'
 	String get avgRating => 'Average rating';
 
-	/// en: 'Total ratings'
-	String get totalRatings => 'Total ratings';
+	/// en: '$n total'
+	String totalRatings({required Object n}) => '${n} total';
 
-	/// en: 'Words saved (platform)'
-	String get wordsLearned => 'Words saved (platform)';
+	/// en: 'Signups (last 6 months)'
+	String get signupsOverTime => 'Signups (last 6 months)';
 
-	/// en: 'Signups over time'
-	String get signupsOverTime => 'Signups over time';
-
-	/// en: 'Streak distribution'
-	String get streakDistribution => 'Streak distribution';
-
-	/// en: 'Saved words by language'
-	String get wordsByLanguage => 'Saved words by language';
+	/// en: 'Rating distribution'
+	String get ratingDistribution => 'Rating distribution';
 
 	/// en: 'Not enough data to chart yet'
 	String get noChartData => 'Not enough data to chart yet';
@@ -554,15 +551,14 @@ extension on Translations {
 			'common.all' => 'All',
 			'common.none' => '—',
 			'dashboard.title' => 'Overview',
+			'dashboard.subtitle' => 'Platform activity at a glance',
 			'dashboard.totalUsers' => 'Total users',
-			'dashboard.activeUsers7d' => 'Active (7 days)',
+			'dashboard.newThisMonth' => 'New this month',
 			'dashboard.openComplaints' => 'Open complaints',
 			'dashboard.avgRating' => 'Average rating',
-			'dashboard.totalRatings' => 'Total ratings',
-			'dashboard.wordsLearned' => 'Words saved (platform)',
-			'dashboard.signupsOverTime' => 'Signups over time',
-			'dashboard.streakDistribution' => 'Streak distribution',
-			'dashboard.wordsByLanguage' => 'Saved words by language',
+			'dashboard.totalRatings' => ({required Object n}) => '${n} total',
+			'dashboard.signupsOverTime' => 'Signups (last 6 months)',
+			'dashboard.ratingDistribution' => 'Rating distribution',
 			'dashboard.noChartData' => 'Not enough data to chart yet',
 			'users.title' => 'Users',
 			'users.searchHint' => 'Search by email or name',

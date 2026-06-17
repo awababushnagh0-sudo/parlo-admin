@@ -55,10 +55,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final authState = ref.watch(AuthDeps.authControllerProvider);
-    final status = ref.watch(AuthDeps.authStatusProvider).valueOrNull;
+    final statusAsync = ref.watch(AuthDeps.authStatusProvider);
+    final status = statusAsync.value;
+    final resolving = statusAsync.isLoading && !statusAsync.hasValue;
     final isLoading = authState.isLoading;
 
-    // Surface sign-in errors as a snack bar (mirrors the mobile auth screen).
     ref.listen(AuthDeps.authControllerProvider, (previous, next) {
       next.whenOrNull(
         error: (error, _) {
@@ -70,29 +71,120 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
     });
 
+    final formCard = AppCard(
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      child: resolving
+          ? const SizedBox(
+              height: 160,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          : status == AuthStatus.notAdmin
+          ? _NotAuthorized()
+          : _LoginForm(
+              formKey: _formKey,
+              emailController: _emailController,
+              passwordController: _passwordController,
+              obscure: _obscure,
+              isLoading: isLoading,
+              onToggleObscure: () => setState(() => _obscure = !_obscure),
+              onSubmit: _submit,
+              theme: theme,
+              t: t,
+            ),
+    );
+
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            child: AppCard(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final wide = constraints.maxWidth >= 920;
+          final form = Center(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(AppSpacing.xl),
-              child: status == AuthStatus.notAdmin
-                  ? _NotAuthorized(email: t.auth.notAuthorized)
-                  : _LoginForm(
-                      formKey: _formKey,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                      obscure: _obscure,
-                      isLoading: isLoading,
-                      onToggleObscure: () => setState(() => _obscure = !_obscure),
-                      onSubmit: _submit,
-                      theme: theme,
-                      t: t,
-                    ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: formCard,
+              ),
+            ),
+          );
+          if (!wide) return form;
+          return Row(
+            children: [
+              const Expanded(flex: 5, child: _BrandPanel()),
+              Expanded(flex: 4, child: form),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Dark brand panel shown beside the form on wide screens — the one "moment"
+/// of saturated brand presence in an otherwise restrained product UI.
+class _BrandPanel extends StatelessWidget {
+  const _BrandPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final textTheme = Theme.of(context).textTheme;
+    Widget bullet(IconData icon, String label) => Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm + 2),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.tertiary, size: 18),
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            label,
+            style: textTheme.bodyMedium?.copyWith(
+              color: Colors.white.withValues(alpha: 0.85),
             ),
           ),
+        ],
+      ),
+    );
+
+    return DecoratedBox(
+      decoration: const BoxDecoration(color: AppColors.backgroundDark),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xxl),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.18),
+                borderRadius: BorderRadius.circular(AppRadius.lg),
+              ),
+              child: const Icon(Icons.shield_rounded, color: AppColors.tertiary, size: 28),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              t.app.title,
+              style: textTheme.headlineMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 360),
+              child: Text(
+                t.app.tagline,
+                style: textTheme.bodyLarge?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.7),
+                  height: 1.4,
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            bullet(Icons.people_rounded, t.nav.users),
+            bullet(Icons.report_rounded, t.nav.complaints),
+            bullet(Icons.star_rounded, t.nav.ratings),
+          ],
         ),
       ),
     );
@@ -131,17 +223,13 @@ class _LoginForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            width: 56,
-            height: 56,
+            width: 52,
+            height: 52,
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
-            child: const Icon(
-              Icons.shield_outlined,
-              color: AppColors.primary,
-              size: 30,
-            ),
+            child: const Icon(Icons.lock_outline_rounded, color: AppColors.primary, size: 26),
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(t.auth.title, style: theme.textTheme.headlineSmall),
@@ -212,10 +300,6 @@ class _LoginForm extends StatelessWidget {
 }
 
 class _NotAuthorized extends ConsumerWidget {
-  const _NotAuthorized({required this.email});
-
-  final String email;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
