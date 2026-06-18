@@ -1,3 +1,5 @@
+import 'package:polyglot_admin/features/users/domain/entities/content_item.dart';
+import 'package:polyglot_admin/features/users/domain/entities/daily_activity.dart';
 import 'package:polyglot_admin/features/users/domain/entities/managed_user.dart';
 
 abstract class UsersRepository {
@@ -9,6 +11,16 @@ abstract class UsersRepository {
 
   /// Counts of a user's saved content (words, sentences, videos, decks).
   Future<UserContentCounts> getContentCounts(String userId);
+
+  /// Lists a user's saved content of a given [kind].
+  Future<List<ContentItem>> getContent(
+    String userId,
+    ContentKind kind, {
+    int limit,
+  });
+
+  /// A user's recent daily activity.
+  Future<List<DailyActivity>> getRecentActivity(String userId, {int days});
 
   Future<void> updateName(String userId, String name);
 

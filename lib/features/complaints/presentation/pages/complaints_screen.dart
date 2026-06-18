@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:polyglot_admin/core/l10n/generated/translations.g.dart';
 import 'package:polyglot_admin/core/theme/app_spacing.dart';
+import 'package:polyglot_admin/core/ui/csv_export.dart';
 import 'package:polyglot_admin/core/ui/format.dart';
 import 'package:polyglot_admin/core/ui/widgets/async_value_view.dart';
 import 'package:polyglot_admin/core/ui/widgets/console_table.dart';
@@ -42,6 +43,11 @@ class ComplaintsScreen extends ConsumerWidget {
               onSelect: (s) => ref
                   .read(ComplaintsDeps.statusFilterProvider.notifier)
                   .select(s),
+            ),
+            OutlinedButton.icon(
+              onPressed: () => _export(complaints.value ?? const [], t),
+              icon: const Icon(Icons.download_rounded, size: 18),
+              label: Text(t.common.export),
             ),
           ],
         ),
@@ -116,6 +122,29 @@ class ComplaintsScreen extends ConsumerWidget {
         ),
       ),
     ];
+  }
+
+  void _export(List<Complaint> items, Translations t) {
+    final rows = <List<String>>[
+      [
+        t.complaints.columnUser,
+        t.complaints.category,
+        t.complaints.target,
+        t.complaints.columnMessage,
+        t.complaints.columnStatus,
+        t.complaints.columnDate,
+      ],
+      for (final c in items)
+        [
+          c.userEmail,
+          c.category.label(t),
+          c.targetType.label(t) + (c.targetId != null ? ' (${c.targetId})' : ''),
+          c.message,
+          c.status.label(t),
+          Format.date(c.createdAt),
+        ],
+    ];
+    downloadCsv('parlo-complaints.csv', rows);
   }
 }
 

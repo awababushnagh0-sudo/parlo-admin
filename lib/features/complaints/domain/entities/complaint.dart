@@ -58,6 +58,7 @@ class Complaint with EquatableMixin {
   final String message;
   final ComplaintStatus status;
   final String? adminNote;
+  final String? assignedTo;
   final DateTime? createdAt;
   final DateTime? resolvedAt;
 
@@ -71,9 +72,18 @@ class Complaint with EquatableMixin {
     required this.message,
     required this.status,
     this.adminNote,
+    this.assignedTo,
     this.createdAt,
     this.resolvedAt,
   });
+
+  /// Time from submission to resolution, when both are known.
+  Duration? get resolutionTime {
+    final created = createdAt;
+    final resolved = resolvedAt;
+    if (created == null || resolved == null) return null;
+    return resolved.difference(created);
+  }
 
   @override
   List<Object?> get props => [
@@ -86,6 +96,7 @@ class Complaint with EquatableMixin {
     message,
     status,
     adminNote,
+    assignedTo,
     createdAt,
     resolvedAt,
   ];

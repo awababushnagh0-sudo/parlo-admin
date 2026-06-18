@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:polyglot_admin/core/config/app_config.dart';
 import 'package:polyglot_admin/features/users/data/models/managed_user_model.dart';
+import 'package:polyglot_admin/features/users/domain/entities/content_item.dart';
+import 'package:polyglot_admin/features/users/domain/entities/daily_activity.dart';
 import 'package:polyglot_admin/features/users/domain/entities/managed_user.dart';
 
 /// Talks to the `users` collection and its subcollections. Admin reads/writes
@@ -61,6 +63,76 @@ class UsersFirestoreDataSource {
   Future<int> _count(CollectionReference<Map<String, dynamic>> ref) async {
     final agg = await ref.count().get();
     return agg.count ?? 0;
+  }
+
+  static DateTime? _toDate(dynamic v) {
+    if (v is Timestamp) return v.toDate();
+    if (v is DateTime) return v;
+    return null;
+  }
+
+  static String _subFor(ContentKind kind) => switch (kind) {
+    ContentKind.words => AppConfig.wordsSub,
+    ContentKind.sentences => AppConfig.sentencesSub,
+    ContentKind.videos => AppConfig.videosSub,
+    ContentKind.decks => AppConfig.decksSub,
+  };
+
+  /// Lists a user's saved content for [kind], mapped defensively from whatever
+  /// fields the subcollection documents carry.
+  Future<List<ContentItem>> getContent(
+    String userId,
+    ContentKind kind, {
+    int limit = 100,
+  }) async {
+    final snap = await _users
+        .doc(userId)
+        .collection(_subFor(kind))
+        .limit(limit)
+        .get();
+    return snap.docs.map((d) => _toContentItem(d.id, d.data())).toList();
+  }
+
+  ContentItem _toContentItem(String id, Map<String, dynamic> data) {
+    String? str(String key) => data[key] as String?;
+    final primary = str('word') ?? str('title') ?? str('name') ?? str('front') ?? id;
+    final secondary = str('definition') ??
+        str('description') ??
+        str('back') ??
+        str('videoUrl') ??
+        str('video_url') ??
+        '';
+    return ContentItem(
+      id: id,
+      primary: primary,
+      secondary: secondary,
+      language: str('language'),
+      createdAt: _toDate(data['createdAt']),
+    );
+  }
+
+  /// A user's daily activity (newest first).
+  Future<List<DailyActivity>> getRecentActivity(
+    String userId, {
+    int days = 90,
+  }) async {
+    final snap = await _users
+        .doc(userId)
+        .collection(AppConfig.activitySub)
+        .get();
+    final items = snap.docs.map((d) {
+      final data = d.data();
+      int toInt(dynamic v) => v is num ? v.toInt() : 0;
+      return DailyActivity(
+        date: (data['date'] as String?) ?? d.id,
+        reviews: toInt(data['reviews']),
+        wordsSaved: toInt(data['wordsSaved']),
+        xp: toInt(data['xp']),
+        secondsStudied: toInt(data['secondsStudied']),
+      );
+    }).toList();
+    items.sort((a, b) => b.date.compareTo(a.date));
+    return items;
   }
 
   Future<void> updateName(String userId, String name) {

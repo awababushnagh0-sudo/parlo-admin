@@ -8,9 +8,13 @@ import 'package:polyglot_admin/core/theme/app_spacing.dart';
 import 'package:polyglot_admin/core/theme/app_snack_bar.dart';
 import 'package:polyglot_admin/core/ui/format.dart';
 import 'package:polyglot_admin/core/ui/widgets/action_button.dart';
+import 'package:polyglot_admin/core/ui/widgets/activity_heatmap.dart';
 import 'package:polyglot_admin/core/ui/widgets/app_card.dart';
 import 'package:polyglot_admin/core/ui/widgets/confirm_dialog.dart';
 import 'package:polyglot_admin/core/ui/widgets/empty_state.dart';
+import 'package:polyglot_admin/core/ui/widgets/status_badge.dart';
+import 'package:polyglot_admin/features/admins/presentation/providers/admins_deps.dart';
+import 'package:polyglot_admin/features/users/domain/entities/content_item.dart';
 import 'package:polyglot_admin/features/users/domain/entities/managed_user.dart';
 import 'package:polyglot_admin/features/users/presentation/providers/users_deps.dart';
 
@@ -54,6 +58,8 @@ class _UserDetailBody extends ConsumerWidget {
     final stats = ref.watch(UsersDeps.userStatsProvider(user.id));
     final counts = ref.watch(UsersDeps.userContentCountsProvider(user.id));
     final busy = ref.watch(UsersDeps.controllerProvider).isLoading;
+    final isUserAdmin = ref.watch(AdminsDeps.isUserAdminProvider(user.id));
+    final adminBusy = ref.watch(AdminsDeps.controllerProvider).isLoading;
 
     return ListView(
       children: [
@@ -119,6 +125,14 @@ class _UserDetailBody extends ConsumerWidget {
                       ],
                     ),
                   ),
+                  if (isUserAdmin) ...[
+                    const SizedBox(width: AppSpacing.sm),
+                    StatusBadge(
+                      label: t.users.adminBadge,
+                      color: AppColors.primary,
+                      icon: Icons.shield_rounded,
+                    ),
+                  ],
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
@@ -161,9 +175,11 @@ class _UserDetailBody extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.lg),
+        _ActivityHeatmapCard(userId: user.id),
+        const SizedBox(height: AppSpacing.lg),
 
         // Content counts
-        _SectionTitle(t.users.profile),
+        _SectionTitle(t.users.content),
         const SizedBox(height: AppSpacing.sm),
         _MetricsWrap(
           children: [
@@ -185,8 +201,16 @@ class _UserDetailBody extends ConsumerWidget {
               label: t.users.savedVideos,
               value: '${counts.value?.videos ?? 0}',
             ),
+            _Metric(
+              icon: Icons.style_outlined,
+              color: AppColors.accentPurple,
+              label: t.users.savedDecks,
+              value: '${counts.value?.decks ?? 0}',
+            ),
           ],
         ),
+        const SizedBox(height: AppSpacing.lg),
+        _ContentBrowser(userId: user.id),
         const SizedBox(height: AppSpacing.xl),
 
         // Actions
@@ -216,6 +240,19 @@ class _UserDetailBody extends ConsumerWidget {
                 child: Text(
                   user.disabled ? t.users.enableUser : t.users.disableUser,
                 ),
+              ),
+            ),
+            SizedBox(
+              width: 220,
+              child: ActionButton(
+                variant: isUserAdmin
+                    ? ActionButtonVariant.default_
+                    : ActionButtonVariant.primary,
+                icon: isUserAdmin
+                    ? Icons.remove_moderator_outlined
+                    : Icons.add_moderator_outlined,
+                onTap: adminBusy ? null : () => _setAdmin(context, ref, !isUserAdmin),
+                child: Text(isUserAdmin ? t.users.removeAdmin : t.users.makeAdmin),
               ),
             ),
             SizedBox(
@@ -287,6 +324,22 @@ class _UserDetailBody extends ConsumerWidget {
     if (context.mounted) {
       _toast(context, ok, disable ? t.users.userDisabled : t.users.userEnabled);
     }
+  }
+
+  Future<void> _setAdmin(BuildContext context, WidgetRef ref, bool make) async {
+    final t = Translations.of(context);
+    final controller = ref.read(AdminsDeps.controllerProvider.notifier);
+    final ok = make
+        ? await controller.addAdmin(uid: user.id, email: user.email)
+        : await controller.removeAdmin(user.id);
+    if (!context.mounted) return;
+    AppSnackBar.show(
+      context,
+      message: ok
+          ? (make ? t.users.madeAdmin : t.users.removedAdmin)
+          : t.auth.somethingWrong,
+      type: ok ? AppSnackBarType.success : AppSnackBarType.error,
+    );
   }
 
   Future<void> _deleteData(BuildContext context, WidgetRef ref) async {
@@ -429,6 +482,162 @@ class _Metric extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ActivityHeatmapCard extends ConsumerWidget {
+  const _ActivityHeatmapCard({required this.userId});
+
+  final String userId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+    final activity = ref.watch(UsersDeps.userActivityProvider(userId));
+    return AppCard(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(t.users.activityHeatmap, style: theme.textTheme.titleSmall),
+          const SizedBox(height: AppSpacing.md),
+          activity.when(
+            loading: () => const SizedBox(
+              height: 120,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (_, _) => Text(
+              t.auth.somethingWrong,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            data: (days) {
+              final byDate = <String, int>{
+                for (final d in days) d.date: d.total,
+              };
+              return ActivityHeatmap(valuesByDate: byDate, today: DateTime.now());
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ContentBrowser extends ConsumerStatefulWidget {
+  const _ContentBrowser({required this.userId});
+
+  final String userId;
+
+  @override
+  ConsumerState<_ContentBrowser> createState() => _ContentBrowserState();
+}
+
+class _ContentBrowserState extends ConsumerState<_ContentBrowser> {
+  ContentKind _kind = ContentKind.words;
+
+  String _label(ContentKind kind, Translations t) => switch (kind) {
+    ContentKind.words => t.users.contentWords,
+    ContentKind.sentences => t.users.contentSentences,
+    ContentKind.videos => t.users.contentVideos,
+    ContentKind.decks => t.users.contentDecks,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+    final content = ref.watch(
+      UsersDeps.userContentProvider((userId: widget.userId, kind: _kind)),
+    );
+
+    return AppCard(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: AppSpacing.sm,
+            children: [
+              for (final kind in ContentKind.values)
+                ChoiceChip(
+                  label: Text(_label(kind, t)),
+                  selected: _kind == kind,
+                  onSelected: (_) => setState(() => _kind = kind),
+                ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          content.when(
+            loading: () => const Padding(
+              padding: EdgeInsets.all(AppSpacing.lg),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (_, _) => Text(
+              t.auth.somethingWrong,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            data: (items) {
+              if (items.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                  child: Text(
+                    t.users.noContent,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                );
+              }
+              return Column(
+                children: [
+                  for (final item in items)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              item.primary,
+                              style: theme.textTheme.titleSmall,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              item.secondary,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (item.language != null)
+                            Text(
+                              item.language!.toUpperCase(),
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }

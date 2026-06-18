@@ -20,6 +20,7 @@ class ComplaintModel {
       message: json?['message'] as String? ?? '',
       status: ComplaintStatus.fromKey(json?['status'] as String?),
       adminNote: json?['adminNote'] as String?,
+      assignedTo: json?['assignedTo'] as String?,
       createdAt: _toDate(json?['createdAt']),
       resolvedAt: _toDate(json?['resolvedAt']),
     );

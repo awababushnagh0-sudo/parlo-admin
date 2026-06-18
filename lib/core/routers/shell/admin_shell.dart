@@ -47,6 +47,18 @@ final _navItems = <_NavItem>[
     selectedIcon: Icons.star_rounded,
     label: (t) => t.nav.ratings,
   ),
+  _NavItem(
+    path: '/admins',
+    icon: Icons.shield_outlined,
+    selectedIcon: Icons.shield_rounded,
+    label: (t) => t.nav.admins,
+  ),
+  _NavItem(
+    path: '/settings',
+    icon: Icons.settings_outlined,
+    selectedIcon: Icons.settings_rounded,
+    label: (t) => t.nav.settings,
+  ),
 ];
 
 /// Persistent app shell: a custom left sidebar (brand → nav tiles → admin chip)
@@ -59,7 +71,8 @@ class AdminShell extends ConsumerWidget {
 
   int _activeIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.path;
-    var best = 0;
+    // -1 = no nav tile selected (e.g. the /account route lives off the rail).
+    var best = -1;
     var bestLen = -1;
     for (var i = 0; i < _navItems.length; i++) {
       final path = _navItems[i].path;
@@ -306,30 +319,45 @@ class _FooterExtended extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: AppColors.primary.withValues(alpha: 0.14),
-              child: Text(
-                email == null ? '?' : Format.initials(email!),
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+        InkWell(
+          onTap: () => context.go('/account'),
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.xs,
+              vertical: AppSpacing.xs,
             ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                email ?? '—',
-                style: theme.textTheme.bodySmall?.copyWith(
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 16,
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.14),
+                  child: Text(
+                    email == null ? '?' : Format.initials(email!),
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    email ?? '—',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 16,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
-                overflow: TextOverflow.ellipsis,
-              ),
+              ],
             ),
-          ],
+          ),
         ),
         const SizedBox(height: AppSpacing.sm),
         Row(
@@ -367,6 +395,11 @@ class _FooterCollapsed extends ConsumerWidget {
     final t = Translations.of(context);
     return Column(
       children: [
+        IconButton(
+          tooltip: t.account.title,
+          onPressed: () => context.go('/account'),
+          icon: const Icon(Icons.account_circle_outlined),
+        ),
         IconButton(
           tooltip: t.nav.toggleTheme,
           onPressed: () => ref.read(themeProvider.notifier).toggle(),

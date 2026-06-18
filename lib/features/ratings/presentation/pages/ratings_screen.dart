@@ -4,6 +4,7 @@ import 'package:polyglot_admin/core/l10n/generated/translations.g.dart';
 import 'package:polyglot_admin/core/theme/app_colors.dart';
 import 'package:polyglot_admin/core/theme/app_radius.dart';
 import 'package:polyglot_admin/core/theme/app_spacing.dart';
+import 'package:polyglot_admin/core/ui/csv_export.dart';
 import 'package:polyglot_admin/core/ui/format.dart';
 import 'package:polyglot_admin/core/ui/widgets/app_card.dart';
 import 'package:polyglot_admin/core/ui/widgets/async_value_view.dart';
@@ -40,6 +41,13 @@ class RatingsScreen extends ConsumerWidget {
         PageHeader(
           title: t.ratings.title,
           subtitle: ratings.hasValue ? t.ratings.count(n: total) : null,
+          actions: [
+            OutlinedButton.icon(
+              onPressed: () => _export(ratings.value ?? const [], t),
+              icon: const Icon(Icons.download_rounded, size: 18),
+              label: Text(t.common.export),
+            ),
+          ],
         ),
         Expanded(
           child: AsyncValueView(
@@ -106,6 +114,27 @@ class RatingsScreen extends ConsumerWidget {
         ),
       ),
     ];
+  }
+
+  void _export(List<Rating> items, Translations t) {
+    final rows = <List<String>>[
+      [
+        t.ratings.columnUser,
+        t.ratings.columnType,
+        t.ratings.columnStars,
+        t.ratings.columnComment,
+        t.ratings.columnDate,
+      ],
+      for (final r in items)
+        [
+          r.userEmail,
+          r.type.label(t),
+          '${r.stars}',
+          r.comment ?? '',
+          Format.date(r.createdAt),
+        ],
+    ];
+    downloadCsv('parlo-ratings.csv', rows);
   }
 }
 

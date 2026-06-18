@@ -88,6 +88,17 @@ class _ComplaintDetailDialogState extends ConsumerState<ComplaintDetailDialog> {
               _row(t.complaints.category, c.category.label(t), theme),
               _row(t.complaints.target, target, theme),
               _row(t.complaints.columnDate, Format.dateTime(c.createdAt), theme),
+              _row(
+                t.complaints.assignedTo,
+                c.assignedTo ?? t.complaints.unassigned,
+                theme,
+              ),
+              if (c.resolutionTime != null)
+                _row(
+                  t.complaints.resolutionTime,
+                  _fmtDuration(c.resolutionTime!),
+                  theme,
+                ),
               const SizedBox(height: AppSpacing.md),
               Text(t.complaints.message, style: theme.textTheme.labelMedium),
               const SizedBox(height: AppSpacing.xs),
@@ -123,6 +134,15 @@ class _ComplaintDetailDialogState extends ConsumerState<ComplaintDetailDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(t.common.close),
         ),
+        OutlinedButton.icon(
+          onPressed: busy
+              ? null
+              : () => ref
+                    .read(ComplaintsDeps.controllerProvider.notifier)
+                    .assignToMe(c.id),
+          icon: const Icon(Icons.person_pin_circle_outlined, size: 18),
+          label: Text(t.complaints.assignToMe),
+        ),
         if (c.status != ComplaintStatus.open)
           OutlinedButton.icon(
             onPressed: busy ? null : () => _setStatus(ComplaintStatus.open),
@@ -143,6 +163,12 @@ class _ComplaintDetailDialogState extends ConsumerState<ComplaintDetailDialog> {
           ),
       ],
     );
+  }
+
+  String _fmtDuration(Duration d) {
+    if (d.inDays > 0) return '${d.inDays}d ${d.inHours % 24}h';
+    if (d.inHours > 0) return '${d.inHours}h ${d.inMinutes % 60}m';
+    return '${d.inMinutes}m';
   }
 
   Widget _row(String label, String value, ThemeData theme) {
