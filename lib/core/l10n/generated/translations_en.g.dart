@@ -48,6 +48,10 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$users$en users = Translations$users$en.internal(_root);
 	late final Translations$complaints$en complaints = Translations$complaints$en.internal(_root);
 	late final Translations$ratings$en ratings = Translations$ratings$en.internal(_root);
+	late final Translations$admins$en admins = Translations$admins$en.internal(_root);
+	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
+	late final Translations$audit$en audit = Translations$audit$en.internal(_root);
+	late final Translations$account$en account = Translations$account$en.internal(_root);
 }
 
 // Path: app
@@ -84,6 +88,12 @@ class Translations$nav$en {
 
 	/// en: 'Ratings'
 	String get ratings => 'Ratings';
+
+	/// en: 'Admins'
+	String get admins => 'Admins';
+
+	/// en: 'Settings'
+	String get settings => 'Settings';
 
 	/// en: 'Sign out'
 	String get signOut => 'Sign out';
@@ -192,6 +202,15 @@ class Translations$common$en {
 
 	/// en: '—'
 	String get none => '—';
+
+	/// en: 'Export CSV'
+	String get export => 'Export CSV';
+
+	/// en: 'Add'
+	String get add => 'Add';
+
+	/// en: 'Remove'
+	String get remove => 'Remove';
 }
 
 // Path: dashboard
@@ -231,6 +250,39 @@ class Translations$dashboard$en {
 
 	/// en: 'Not enough data to chart yet'
 	String get noChartData => 'Not enough data to chart yet';
+
+	/// en: 'Backend'
+	String get backendStatus => 'Backend';
+
+	/// en: 'Healthy'
+	String get backendHealthy => 'Healthy';
+
+	/// en: 'Unreachable'
+	String get backendDown => 'Unreachable';
+
+	/// en: 'Checking…'
+	String get backendChecking => 'Checking…';
+
+	/// en: '${ms} ms'
+	String latency({required Object ms}) => '${ms} ms';
+
+	/// en: 'Active users (30 days)'
+	String get activeUsers => 'Active users (30 days)';
+
+	/// en: 'Saved words by language'
+	String get wordsByLanguage => 'Saved words by language';
+
+	/// en: 'Most-saved words'
+	String get topWords => 'Most-saved words';
+
+	/// en: 'Most-reported items'
+	String get mostReported => 'Most-reported items';
+
+	/// en: 'Platform analytics'
+	String get platformAnalytics => 'Platform analytics';
+
+	/// en: 'Aggregated across all users. Needs collection-group indexes.'
+	String get analyticsHint => 'Aggregated across all users. Needs collection-group indexes.';
 }
 
 // Path: users
@@ -304,6 +356,9 @@ class Translations$users$en {
 	/// en: 'Saved videos'
 	String get savedVideos => 'Saved videos';
 
+	/// en: 'Decks'
+	String get savedDecks => 'Decks';
+
 	/// en: 'Current streak'
 	String get currentStreak => 'Current streak';
 
@@ -348,6 +403,63 @@ class Translations$users$en {
 
 	/// en: 'User data deleted'
 	String get userDeleted => 'User data deleted';
+
+	/// en: 'Make admin'
+	String get makeAdmin => 'Make admin';
+
+	/// en: 'Remove admin'
+	String get removeAdmin => 'Remove admin';
+
+	/// en: 'Admin'
+	String get adminBadge => 'Admin';
+
+	/// en: 'User is now an admin'
+	String get madeAdmin => 'User is now an admin';
+
+	/// en: 'Admin access removed'
+	String get removedAdmin => 'Admin access removed';
+
+	/// en: 'Saved content'
+	String get content => 'Saved content';
+
+	/// en: 'Words'
+	String get contentWords => 'Words';
+
+	/// en: 'Sentences'
+	String get contentSentences => 'Sentences';
+
+	/// en: 'Videos'
+	String get contentVideos => 'Videos';
+
+	/// en: 'Decks'
+	String get contentDecks => 'Decks';
+
+	/// en: 'No items'
+	String get noContent => 'No items';
+
+	/// en: 'Last 90 days'
+	String get activityHeatmap => 'Last 90 days';
+
+	/// en: 'Sort'
+	String get sortBy => 'Sort';
+
+	/// en: 'Joined'
+	String get sortJoined => 'Joined';
+
+	/// en: 'Streak'
+	String get sortStreak => 'Streak';
+
+	/// en: 'Email'
+	String get sortEmail => 'Email';
+
+	/// en: 'All'
+	String get filterAll => 'All';
+
+	/// en: 'Active'
+	String get filterActive => 'Active';
+
+	/// en: 'Disabled'
+	String get filterDisabled => 'Disabled';
 }
 
 // Path: complaints
@@ -417,6 +529,18 @@ class Translations$complaints$en {
 
 	/// en: 'Complaint updated'
 	String get statusUpdated => 'Complaint updated';
+
+	/// en: 'Time to resolve'
+	String get resolutionTime => 'Time to resolve';
+
+	/// en: 'Assigned to'
+	String get assignedTo => 'Assigned to';
+
+	/// en: 'Assign to me'
+	String get assignToMe => 'Assign to me';
+
+	/// en: 'Unassigned'
+	String get unassigned => 'Unassigned';
 
 	/// en: 'Open'
 	String get status_open => 'Open';
@@ -506,6 +630,243 @@ class Translations$ratings$en {
 	String get type_video => 'Video';
 }
 
+// Path: admins
+class Translations$admins$en {
+	Translations$admins$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Administrators'
+	String get title => 'Administrators';
+
+	/// en: '$n admins'
+	String count({required Object n}) => '${n} admins';
+
+	/// en: 'Admin'
+	String get columnAdmin => 'Admin';
+
+	/// en: 'Added'
+	String get columnAdded => 'Added';
+
+	/// en: 'Add admin'
+	String get add => 'Add admin';
+
+	/// en: 'Add an administrator'
+	String get addTitle => 'Add an administrator';
+
+	/// en: 'User UID'
+	String get uidLabel => 'User UID';
+
+	/// en: 'Firebase Auth UID'
+	String get uidHint => 'Firebase Auth UID';
+
+	/// en: 'Email (label)'
+	String get emailLabel => 'Email (label)';
+
+	/// en: 'Tip: open a user and use "Make admin" to add them by name.'
+	String get addHint => 'Tip: open a user and use "Make admin" to add them by name.';
+
+	/// en: 'Remove'
+	String get remove => 'Remove';
+
+	/// en: 'Remove admin?'
+	String get removeTitle => 'Remove admin?';
+
+	/// en: '$email will lose admin access to this dashboard.'
+	String removeWarning({required Object email}) => '${email} will lose admin access to this dashboard.';
+
+	/// en: 'Admin added'
+	String get added => 'Admin added';
+
+	/// en: 'Admin removed'
+	String get removed => 'Admin removed';
+
+	/// en: 'No administrators yet'
+	String get noAdmins => 'No administrators yet';
+
+	/// en: 'You'
+	String get you => 'You';
+}
+
+// Path: settings
+class Translations$settings$en {
+	Translations$settings$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Settings'
+	String get title => 'Settings';
+
+	/// en: 'Remote config'
+	String get remoteConfig => 'Remote config';
+
+	/// en: 'Controls the live mobile app.'
+	String get remoteConfigDesc => 'Controls the live mobile app.';
+
+	/// en: 'Announcements'
+	String get announcements => 'Announcements';
+
+	/// en: 'Audit log'
+	String get auditLog => 'Audit log';
+
+	/// en: 'Maintenance mode'
+	String get maintenanceMode => 'Maintenance mode';
+
+	/// en: 'Blocks the mobile app with a maintenance screen.'
+	String get maintenanceModeDesc => 'Blocks the mobile app with a maintenance screen.';
+
+	/// en: 'Default daily goal'
+	String get dailyGoalDefault => 'Default daily goal';
+
+	/// en: 'Minimum app version'
+	String get minAppVersion => 'Minimum app version';
+
+	/// en: 'Settings saved'
+	String get saved => 'Settings saved';
+
+	/// en: 'Title'
+	String get announcementTitle => 'Title';
+
+	/// en: 'Message'
+	String get announcementBody => 'Message';
+
+	/// en: 'Active'
+	String get active => 'Active';
+
+	/// en: 'Post announcement'
+	String get post => 'Post announcement';
+
+	/// en: 'Announcement posted'
+	String get posted => 'Announcement posted';
+
+	/// en: 'Announcement deleted'
+	String get deleted => 'Announcement deleted';
+
+	/// en: 'No announcements'
+	String get noAnnouncements => 'No announcements';
+
+	/// en: 'Delete announcement?'
+	String get deleteAnnouncement => 'Delete announcement?';
+}
+
+// Path: audit
+class Translations$audit$en {
+	Translations$audit$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Audit log'
+	String get title => 'Audit log';
+
+	/// en: 'Admin'
+	String get columnAdmin => 'Admin';
+
+	/// en: 'Action'
+	String get columnAction => 'Action';
+
+	/// en: 'Target'
+	String get columnTarget => 'Target';
+
+	/// en: 'When'
+	String get columnDate => 'When';
+
+	/// en: 'No audit entries yet'
+	String get noEntries => 'No audit entries yet';
+
+	/// en: 'Disabled user'
+	String get action_user_disable => 'Disabled user';
+
+	/// en: 'Enabled user'
+	String get action_user_enable => 'Enabled user';
+
+	/// en: 'Deleted user data'
+	String get action_user_delete => 'Deleted user data';
+
+	/// en: 'Renamed user'
+	String get action_user_rename => 'Renamed user';
+
+	/// en: 'Resolved complaint'
+	String get action_complaint_resolve => 'Resolved complaint';
+
+	/// en: 'Dismissed complaint'
+	String get action_complaint_dismiss => 'Dismissed complaint';
+
+	/// en: 'Reopened complaint'
+	String get action_complaint_reopen => 'Reopened complaint';
+
+	/// en: 'Added admin'
+	String get action_admin_add => 'Added admin';
+
+	/// en: 'Removed admin'
+	String get action_admin_remove => 'Removed admin';
+
+	/// en: 'Updated config'
+	String get action_config_update => 'Updated config';
+
+	/// en: 'Posted announcement'
+	String get action_announcement_post => 'Posted announcement';
+
+	/// en: 'Deleted announcement'
+	String get action_announcement_delete => 'Deleted announcement';
+}
+
+// Path: account
+class Translations$account$en {
+	Translations$account$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Account'
+	String get title => 'Account';
+
+	/// en: 'Profile'
+	String get profile => 'Profile';
+
+	/// en: 'Preferences'
+	String get preferences => 'Preferences';
+
+	/// en: 'Email'
+	String get email => 'Email';
+
+	/// en: 'User ID'
+	String get uid => 'User ID';
+
+	/// en: 'Role'
+	String get role => 'Role';
+
+	/// en: 'Administrator'
+	String get administrator => 'Administrator';
+
+	/// en: 'Admin since'
+	String get memberSince => 'Admin since';
+
+	/// en: 'Theme'
+	String get theme => 'Theme';
+
+	/// en: 'System'
+	String get theme_system => 'System';
+
+	/// en: 'Light'
+	String get theme_light => 'Light';
+
+	/// en: 'Dark'
+	String get theme_dark => 'Dark';
+
+	/// en: 'Language'
+	String get language => 'Language';
+
+	/// en: 'Sign out'
+	String get signOut => 'Sign out';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -520,6 +881,8 @@ extension on Translations {
 			'nav.users' => 'Users',
 			'nav.complaints' => 'Complaints',
 			'nav.ratings' => 'Ratings',
+			'nav.admins' => 'Admins',
+			'nav.settings' => 'Settings',
 			'nav.signOut' => 'Sign out',
 			'nav.toggleTheme' => 'Toggle theme',
 			'auth.title' => 'Parlo Admin',
@@ -550,6 +913,9 @@ extension on Translations {
 			'common.refresh' => 'Refresh',
 			'common.all' => 'All',
 			'common.none' => '—',
+			'common.export' => 'Export CSV',
+			'common.add' => 'Add',
+			'common.remove' => 'Remove',
 			'dashboard.title' => 'Overview',
 			'dashboard.subtitle' => 'Platform activity at a glance',
 			'dashboard.totalUsers' => 'Total users',
@@ -560,6 +926,17 @@ extension on Translations {
 			'dashboard.signupsOverTime' => 'Signups (last 6 months)',
 			'dashboard.ratingDistribution' => 'Rating distribution',
 			'dashboard.noChartData' => 'Not enough data to chart yet',
+			'dashboard.backendStatus' => 'Backend',
+			'dashboard.backendHealthy' => 'Healthy',
+			'dashboard.backendDown' => 'Unreachable',
+			'dashboard.backendChecking' => 'Checking…',
+			'dashboard.latency' => ({required Object ms}) => '${ms} ms',
+			'dashboard.activeUsers' => 'Active users (30 days)',
+			'dashboard.wordsByLanguage' => 'Saved words by language',
+			'dashboard.topWords' => 'Most-saved words',
+			'dashboard.mostReported' => 'Most-reported items',
+			'dashboard.platformAnalytics' => 'Platform analytics',
+			'dashboard.analyticsHint' => 'Aggregated across all users. Needs collection-group indexes.',
 			'users.title' => 'Users',
 			'users.searchHint' => 'Search by email or name',
 			'users.count' => ({required Object n}) => '${n} users',
@@ -581,6 +958,7 @@ extension on Translations {
 			'users.savedWords' => 'Saved words',
 			'users.savedSentences' => 'Saved sentences',
 			'users.savedVideos' => 'Saved videos',
+			'users.savedDecks' => 'Decks',
 			'users.currentStreak' => 'Current streak',
 			'users.longestStreak' => 'Longest streak',
 			'users.totalXp' => 'Total XP',
@@ -596,6 +974,25 @@ extension on Translations {
 			'users.userDisabled' => 'User disabled',
 			'users.userEnabled' => 'User enabled',
 			'users.userDeleted' => 'User data deleted',
+			'users.makeAdmin' => 'Make admin',
+			'users.removeAdmin' => 'Remove admin',
+			'users.adminBadge' => 'Admin',
+			'users.madeAdmin' => 'User is now an admin',
+			'users.removedAdmin' => 'Admin access removed',
+			'users.content' => 'Saved content',
+			'users.contentWords' => 'Words',
+			'users.contentSentences' => 'Sentences',
+			'users.contentVideos' => 'Videos',
+			'users.contentDecks' => 'Decks',
+			'users.noContent' => 'No items',
+			'users.activityHeatmap' => 'Last 90 days',
+			'users.sortBy' => 'Sort',
+			'users.sortJoined' => 'Joined',
+			'users.sortStreak' => 'Streak',
+			'users.sortEmail' => 'Email',
+			'users.filterAll' => 'All',
+			'users.filterActive' => 'Active',
+			'users.filterDisabled' => 'Disabled',
 			'complaints.title' => 'Complaints',
 			'complaints.filterStatus' => 'Status',
 			'complaints.count' => ({required Object n}) => '${n} complaints',
@@ -616,6 +1013,10 @@ extension on Translations {
 			'complaints.markDismissed' => 'Dismiss',
 			'complaints.reopen' => 'Reopen',
 			'complaints.statusUpdated' => 'Complaint updated',
+			'complaints.resolutionTime' => 'Time to resolve',
+			'complaints.assignedTo' => 'Assigned to',
+			'complaints.assignToMe' => 'Assign to me',
+			'complaints.unassigned' => 'Unassigned',
 			'complaints.status_open' => 'Open',
 			'complaints.status_resolved' => 'Resolved',
 			'complaints.status_dismissed' => 'Dismissed',
@@ -642,6 +1043,73 @@ extension on Translations {
 			'ratings.type_word' => 'Word',
 			'ratings.type_sentence' => 'Sentence',
 			'ratings.type_video' => 'Video',
+			'admins.title' => 'Administrators',
+			'admins.count' => ({required Object n}) => '${n} admins',
+			'admins.columnAdmin' => 'Admin',
+			'admins.columnAdded' => 'Added',
+			'admins.add' => 'Add admin',
+			'admins.addTitle' => 'Add an administrator',
+			'admins.uidLabel' => 'User UID',
+			'admins.uidHint' => 'Firebase Auth UID',
+			'admins.emailLabel' => 'Email (label)',
+			'admins.addHint' => 'Tip: open a user and use "Make admin" to add them by name.',
+			'admins.remove' => 'Remove',
+			'admins.removeTitle' => 'Remove admin?',
+			'admins.removeWarning' => ({required Object email}) => '${email} will lose admin access to this dashboard.',
+			'admins.added' => 'Admin added',
+			'admins.removed' => 'Admin removed',
+			'admins.noAdmins' => 'No administrators yet',
+			'admins.you' => 'You',
+			'settings.title' => 'Settings',
+			'settings.remoteConfig' => 'Remote config',
+			'settings.remoteConfigDesc' => 'Controls the live mobile app.',
+			'settings.announcements' => 'Announcements',
+			'settings.auditLog' => 'Audit log',
+			'settings.maintenanceMode' => 'Maintenance mode',
+			'settings.maintenanceModeDesc' => 'Blocks the mobile app with a maintenance screen.',
+			'settings.dailyGoalDefault' => 'Default daily goal',
+			'settings.minAppVersion' => 'Minimum app version',
+			'settings.saved' => 'Settings saved',
+			'settings.announcementTitle' => 'Title',
+			'settings.announcementBody' => 'Message',
+			'settings.active' => 'Active',
+			'settings.post' => 'Post announcement',
+			'settings.posted' => 'Announcement posted',
+			'settings.deleted' => 'Announcement deleted',
+			'settings.noAnnouncements' => 'No announcements',
+			'settings.deleteAnnouncement' => 'Delete announcement?',
+			'audit.title' => 'Audit log',
+			'audit.columnAdmin' => 'Admin',
+			'audit.columnAction' => 'Action',
+			'audit.columnTarget' => 'Target',
+			'audit.columnDate' => 'When',
+			'audit.noEntries' => 'No audit entries yet',
+			'audit.action_user_disable' => 'Disabled user',
+			'audit.action_user_enable' => 'Enabled user',
+			'audit.action_user_delete' => 'Deleted user data',
+			'audit.action_user_rename' => 'Renamed user',
+			'audit.action_complaint_resolve' => 'Resolved complaint',
+			'audit.action_complaint_dismiss' => 'Dismissed complaint',
+			'audit.action_complaint_reopen' => 'Reopened complaint',
+			'audit.action_admin_add' => 'Added admin',
+			'audit.action_admin_remove' => 'Removed admin',
+			'audit.action_config_update' => 'Updated config',
+			'audit.action_announcement_post' => 'Posted announcement',
+			'audit.action_announcement_delete' => 'Deleted announcement',
+			'account.title' => 'Account',
+			'account.profile' => 'Profile',
+			'account.preferences' => 'Preferences',
+			'account.email' => 'Email',
+			'account.uid' => 'User ID',
+			'account.role' => 'Role',
+			'account.administrator' => 'Administrator',
+			'account.memberSince' => 'Admin since',
+			'account.theme' => 'Theme',
+			'account.theme_system' => 'System',
+			'account.theme_light' => 'Light',
+			'account.theme_dark' => 'Dark',
+			'account.language' => 'Language',
+			'account.signOut' => 'Sign out',
 			_ => null,
 		};
 	}

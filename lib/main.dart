@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:polyglot_admin/core/l10n/generated/translations.g.dart';
+import 'package:polyglot_admin/core/providers/app_lang_deps.dart';
 import 'package:polyglot_admin/core/providers/app_theme_deps.dart';
 import 'package:polyglot_admin/core/routers/app_router/app_router.dart';
 import 'package:polyglot_admin/core/services/prefs_service.dart';
@@ -42,6 +43,8 @@ class AdminApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeProvider).flutterThemeMode;
+    // Rebuild when the chosen language changes so the new locale is applied.
+    ref.watch(languageProvider);
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,

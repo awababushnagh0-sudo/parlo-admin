@@ -11,4 +11,7 @@ abstract class ComplaintsRepository {
     ComplaintStatus status, {
     String? adminNote,
   });
+
+  /// Assigns (or clears) the complaint's owner.
+  Future<void> assign(String id, String? adminEmail);
 }

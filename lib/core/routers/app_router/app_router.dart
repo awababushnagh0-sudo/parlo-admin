@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:polyglot_admin/core/routers/shell/admin_shell.dart';
+import 'package:polyglot_admin/features/account/presentation/pages/account_screen.dart';
+import 'package:polyglot_admin/features/admins/presentation/pages/admins_screen.dart';
 import 'package:polyglot_admin/features/auth/presentation/pages/login_screen.dart';
 import 'package:polyglot_admin/features/auth/presentation/providers/auth_deps.dart';
 import 'package:polyglot_admin/features/complaints/presentation/pages/complaints_screen.dart';
 import 'package:polyglot_admin/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:polyglot_admin/features/ratings/presentation/pages/ratings_screen.dart';
+import 'package:polyglot_admin/features/settings/presentation/pages/settings_screen.dart';
 import 'package:polyglot_admin/features/users/presentation/pages/user_detail_screen.dart';
 import 'package:polyglot_admin/features/users/presentation/pages/users_list_screen.dart';
 
@@ -69,6 +72,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: '/ratings',
             pageBuilder: (context, state) =>
                 const NoTransitionPage(child: RatingsScreen()),
+          ),
+          GoRoute(
+            path: '/admins',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: AdminsScreen()),
+          ),
+          GoRoute(
+            path: '/settings',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: SettingsScreen()),
+          ),
+          GoRoute(
+            path: '/account',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: AccountScreen()),
           ),
         ],
       ),

@@ -47,4 +47,11 @@ class ComplaintsFirestoreDataSource {
     if (adminNote != null) data['adminNote'] = adminNote;
     return _complaints.doc(id).set(data, SetOptions(merge: true));
   }
+
+  Future<void> assign(String id, String? adminEmail) {
+    return _complaints.doc(id).set(
+      {'assignedTo': adminEmail},
+      SetOptions(merge: true),
+    );
+  }
 }

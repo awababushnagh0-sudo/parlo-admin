@@ -18,4 +18,8 @@ class ComplaintsRepositoryImpl implements ComplaintsRepository {
     String? adminNote,
   }) =>
       _source.updateStatus(id, status, adminNote: adminNote);
+
+  @override
+  Future<void> assign(String id, String? adminEmail) =>
+      _source.assign(id, adminEmail);
 }

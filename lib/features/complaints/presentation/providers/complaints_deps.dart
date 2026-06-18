@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:polyglot_admin/features/audit/presentation/providers/audit_deps.dart';
+import 'package:polyglot_admin/features/auth/data/providers.dart';
 import 'package:polyglot_admin/features/complaints/data/providers.dart';
 import 'package:polyglot_admin/features/complaints/domain/entities/complaint.dart';
 
@@ -55,6 +57,27 @@ class ComplaintsController extends Notifier<AsyncValue<void>> {
       () => ref
           .read(complaintsRepositoryProvider)
           .updateStatus(id, status, adminNote: adminNote),
+    );
+    final ok = !state.hasError;
+    if (ok) {
+      final action = switch (status) {
+        ComplaintStatus.resolved => 'complaint_resolve',
+        ComplaintStatus.dismissed => 'complaint_dismiss',
+        ComplaintStatus.open => 'complaint_reopen',
+      };
+      await ref
+          .read(AuditDeps.loggerProvider)
+          .log(action, targetType: 'complaint', targetId: id);
+    }
+    return ok;
+  }
+
+  /// Assigns the complaint to the current admin (or clears it).
+  Future<bool> assignToMe(String id) async {
+    final email = ref.read(authRepositoryProvider).currentUser?.email;
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () => ref.read(complaintsRepositoryProvider).assign(id, email),
     );
     return !state.hasError;
   }
